@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:#f4f8ff;
+    color:#1e293b;
+}
+
+/* Header */
+
+.header{
+    background:linear-gradient(135deg,#2563eb,#60a5fa);
+    color:white;
+    padding:25px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 8px 25px rgba(37,99,235,.25);
+}
+
+.header h1{
+    font-size:32px;
+    font-weight:700;
+}
+
+.admin-name{
+    font-size:18px;
+    font-weight:600;
+}
+.admin-actions{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.logout-btn{
+    border:none;
+    background:white;
+    color:#2563eb;
+    padding:10px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+}
+
+.logout-btn:hover{
+    background:#dbeafe;
+}
+
+/* Main Container */
+
+.container{
+    padding:30px;
+}
+
+/* Dashboard Cards */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+    margin-bottom:30px;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    border-left:6px solid #2563eb;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card h2{
+    font-size:42px;
+    color:#2563eb;
+    margin-bottom:10px;
+}
+
+.card p{
+    font-size:16px;
+    color:#64748b;
+    font-weight:600;
+}
+
+/* Complaint Section */
+
+.table-section{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.table-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.table-header h2{
+    color:#1e293b;
+}
+
+/* Filters */
+
+.filter-box{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.filter-btn{
+    border:none;
+    background:#e0ecff;
+    color:#2563eb;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.filter-btn:hover{
+    background:#2563eb;
+    color:white;
+}
+
+/* Table */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:15px;
+    text-align:left;
+}
+
+td{
+    padding:15px;
+    border-bottom:1px solid #e2e8f0;
+}
+
+/* Status Badges */
+
+.status{
+    padding:6px 12px;
+    border-radius:20px;
+    color:white;
+    font-size:13px;
+    font-weight:600;
+}
+
+.pending{
+    background:#f59e0b;
+}
+
+.assigned{
+    background:#3b82f6;
+}
+
+.progress{
+    background:#8b5cf6;
+}
+
+.resolved{
+    background:#10b981;
+}
+
+.closed{
+    background:#64748b;
+}
+
+.reopened{
+    background:#ef4444;
+}
+
+.waiting{
+    background:#f59e0b;
+}
+
+/* Buttons */
+
+.assign-btn{
+    border:none;
+    background:#2563eb;
+    color:white;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.assign-btn:hover{
+    background:#1d4ed8;
+}
+
+.close-btn{
+    border:none;
+    background:#ef4444;
+    color:white;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.close-btn:hover{
+    background:#dc2626;
+}
+
+/* Scroll Table */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+/* Custom Time Inputs Formatting */
+.time-input {
+    padding:8px;
+    width:80px;
+    border-radius:6px;
+    border:1px solid #cbd5e1;
+    text-align:center;
+    font-weight:bold;
+}
+
+/* Responsive */
+
+@media(max-width:900px){
+
+    .header{
+        flex-direction:column;
+        gap:10px;
+        text-align:center;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    table{
+        min-width:900px;
+    }
+
+}
+
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="header">
+    
+
+   <div class="sidebar-brand">
+    
+        <div class="icon-badge"><i class="fa-solid fa-train"></i></div>
+        <div>
+            <h1>NCR Railway AMC</h1>
+            <span>North Central Railway, Agra</span>
+        </div>
+    </div>
+    <div class="admin-actions">
+
+        <div class="admin-name" id="adminName">
+            Welcome Admin
+        </div>
+        <button id="attendanceBtn" class="filter-btn">
+    Attendance
+</button>
+
+        <button id="logoutBtn" class="logout-btn">
+            Logout
+        </button>
+
+    </div>
+
+</div>
+
+<div class="container">
+
+    <div class="cards">
+
+        <div class="card">
+            <h2 id="totalComplaints">0</h2>
+            <p>Total Complaints</p>
+        </div>
+
+        <div class="card">
+            <h2 id="pendingComplaints">0</h2>
+            <p>Pending Complaints</p>
+        </div>
+
+        <div class="card">
+            <h2 id="resolvedComplaints">0</h2>
+            <p>Resolved Complaints</p>
+        </div>
+
+        <div class="card" style="border-left-color:#f59e0b;">
+            <h2 id="awaitingVerification" style="color:#b45309;">0</h2>
+            <p>Awaiting Verification</p>
+        </div>
+
+    </div>
+
+    <div class="table-section" style="margin-bottom: 30px; border-left: 6px solid #ef4444;">
+        <div class="table-header">
+            <h2>📢 Create Custom Revolving Train Message Notice</h2>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 650px; margin-top: 10px;">
+            <textarea id="noticeMessage" placeholder="Type notification statement here to load into train wagons (use commas to separate coaches)..." rows="2" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 14px; resize: none;"></textarea>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label style="font-size: 13px; font-weight:600;">Months:</label>
+                    <input type="number" id="noticeMonths" class="time-input" min="0" value="0">
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label style="font-size: 13px; font-weight:600;">Days:</label>
+                    <input type="number" id="noticeDays" class="time-input" min="0" value="0">
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label style="font-size: 13px; font-weight:600;">Minutes:</label>
+                    <input type="number" id="noticeMinutes" class="time-input" min="0" value="30">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <select id="noticeTarget" style="padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: white; font-weight: 600; color: #475569; height: 40px;">
+                    <option value="both">✨ Display on Both Dashboards</option>
+                    <option value="user">👤 User Dashboard Only</option>
+                    <option value="technician">🛠️ Technician Dashboard Only</option>
+                </select>
+
+                <button onclick="publishNotice()" class="assign-btn" style="height: 40px;">Publish Notice</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-section">
+
+        <div class="table-header">
+
+            <h2>Complaint Management</h2>
+
+            <div class="filter-box">
+
+    <button class="filter-btn" onclick="filterComplaints('All')">
+        All
+    </button>
+
+    <button class="filter-btn" onclick="filterComplaints('PC')">
+        PC
+    </button>
+
+    <button class="filter-btn" onclick="filterComplaints('Printer')">
+        Printer
+    </button>
+
+    <button class="filter-btn" onclick="filterComplaints('UPS')">
+        UPS
+    </button>
+
+    <button class="filter-btn" onclick="filterComplaints('Misc')">
+        Misc
+    </button>
+
+</div>
+
+        </div>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Ticket ID</th>
+                    <th>User</th>
+                    <th>Asset</th>
+                    <th>Technician</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="complaintsTable"></tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- Resolved Complaints Awaiting User Verification -->
+    <div class="table-section" style="margin-top:30px; border-left:6px solid #f59e0b;">
+        <div class="table-header">
+            <h2 style="color:#b45309;">🔍 Resolved — Awaiting User Verification</h2>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticket</th>
+                        <th>User</th>
+                        <th>Department</th>
+                        <th>Technician</th>
+                        <th>Resolution Remarks</th>
+                        <th>Resolved On</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="pendingVerifTable">
+                    <tr><td colspan="7" style="text-align:center;padding:16px;color:#64748b;">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div id="attendanceSummary" class="cards" style="display:none; margin-top:30px;">
+
+    <div class="card">
+        <h2 id="presentCount">0</h2>
+        <p>🟢 Present</p>
+    </div>
+
+    <div class="card">
+        <h2 id="halfDayCount">0</h2>
+        <p>🟡 Half Day</p>
+    </div>
+
+    <div class="card">
+        <h2 id="absentCount">0</h2>
+        <p>🔴 Absent</p>
+    </div>
+
+</div>
+
+<div id="attendanceFilters" style="display:none; margin:20px 0;">
+
+    <label><b>Select Date :</b></label>
+
+    <input
+        type="date"
+        id="attendanceDate"
+        style="
+            padding:8px;
+            border:1px solid #ccc;
+            border-radius:6px;
+            margin-left:10px;
+        ">
+
+    <button
+        id="filterAttendanceBtn"
+        class="filter-btn"
+        style="margin-left:10px;">
+        Search
+    </button>
+    <button
+    id="exportAttendanceBtn"
+    class="filter-btn"
+    style="margin-left:10px;">
+    Export Excel
+</button>
+
+<button
+    id="printAttendanceBtn"
+    class="filter-btn"
+    style="margin-left:10px;">
+    Print
+</button>
+
+<input
+    type="text"
+    id="searchTech"
+    placeholder="Search Technician..."
+    style="
+        padding:8px;
+        border:1px solid #ccc;
+        border-radius:6px;
+        margin-left:10px;
+    ">
+
+<button
+    id="searchTechBtn"
+    class="filter-btn"
+    style="margin-left:10px;">
+    Search Technician
+</button>
+
+</div>
+<div class="table-section" id="attendanceSection" style="display:none; margin-top:30px;">
+
+    <div class="table-header">
+        <h2>Technician Attendance</h2>
+    </div>
+
+    <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+<tr>
+    <th>Photo</th>
+    <th>Technician</th>
+    <th>Email</th>
+    <th>Date</th>
+    <th>Check In</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+</thead>
+
+            <tbody id="attendanceTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<div id="customRemarksModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background-color: white; padding: 24px; border-radius: 8px; width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-family: sans-serif;">
+        <h3 id="modalTitle" style="margin-top: 0; margin-bottom: 12px; color: #1e293b;">Enter Remarks</h3>
+        <textarea id="modalRemarksInput" rows="4" style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; resize: none; margin-bottom: 16px;" placeholder="Write details here..."></textarea>
+        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+            <button id="modalCancelBtn" style="padding: 8px 14px; background-color: #e2e8f0; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Cancel</button>
+            <button id="modalSubmitBtn" style="padding: 8px 14px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/admindashboard.js"></script>
+
+</body>
+</html>

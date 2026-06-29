@@ -1,0 +1,193 @@
+const asyncHandler = require('express-async-handler');
+const { query } = require('../config/db');
+
+const VALID_PRODUCTS = ['PC', 'UPS', 'Printer', 'Miscellaneous'];
+
+const generateTicketNumber = async () => {
+    const result = await query("SELECT nextval('ticket_number_seq') AS next_val");
+    return `TCKT-${String(result.rows[0].next_val).padStart(6, '0')}`;
+};
+
+const logHistory = async (complaintId, action, performedBy, remarks = null) => {
+    await query(
+        `INSERT INTO complaint_history (complaint_id, action, performed_by, remarks)
+         VALUES ($1, $2, $3, $4)`,
+        [complaintId, action, performedBy, remarks]
+    );
+};
+
+const createComplaint = asyncHandler(async (req, res) => {
+    const { subject, description, phone, product, department } = req.body;
+    const userId = req.user.id;
+
+    if (!subject || !description || !phone || !product || !department) {
+        res.status(400);
+        throw new Error('All fields (subject, description, phone, product, department) are required.');
+    }
+
+    if (!VALID_PRODUCTS.includes(product)) {
+        res.status(400);
+        throw new Error(`Invalid product. Allowed: ${VALID_PRODUCTS.join(', ')}.`);
+    }
+
+    const ticketNumber = await generateTicketNumber();
+
+    const result = await query(
+        `INSERT INTO complaints
+        (ticket_number, user_id, subject, description, phone, product, department, status)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,'Pending')
+        RETURNING *`,
+        [ticketNumber, userId, subject, description, phone, product, department]
+    );
+
+    const complaint = result.rows[0];
+    await logHistory(complaint.id, 'Complaint Created', req.user.name, 'Complaint submitted by user.');
+
+    res.status(201).json({ message: 'Complaint submitted successfully!', complaint });
+});
+
+const getUserComplaints = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+
+    const result = await query(
+        `SELECT
+            c.id, c.ticket_number, c.subject, c.description, c.status,
+            c.phone, c.product, c.department, c.assigned_to,
+            c.resolution_notes, c.technician_resolution, c.tech_remarks,
+            c.admin_closing_remarks, c.resolved_at, c.closed_at,
+            c.user_verification_response, c.user_verification_remarks, c.user_verified_at,
+            c.created_at, c.updated_at,
+            t.name AS technician_name,
+            t.phone AS technician_phone
+         FROM complaints c
+         LEFT JOIN technicians t ON c.assigned_to = t.id
+         WHERE c.user_id = $1
+         ORDER BY c.created_at DESC`,
+        [userId]
+    );
+
+    res.json(result.rows);
+});
+
+const getComplaintById = asyncHandler(async (req, res) => {
+    const idParam = req.params.id;
+    const isTicket = idParam.toUpperCase().startsWith('TCKT-');
+    const whereClause = isTicket ? 'c.ticket_number = $1' : 'c.id = $1';
+    const lookupValue = isTicket ? idParam.toUpperCase() : idParam;
+
+    const result = await query(
+        `SELECT
+            c.id, c.ticket_number, c.subject, c.description, c.status,
+            c.phone, c.product, c.department, c.assigned_to,
+            c.resolution_notes, c.technician_resolution,
+            c.admin_closing_remarks, c.resolved_at, c.closed_at,
+            c.created_at, c.updated_at,
+            t.name AS technician_name,
+            t.phone AS technician_phone
+         FROM complaints c
+         LEFT JOIN technicians t ON c.assigned_to = t.id
+         WHERE ${whereClause}`,
+        [lookupValue]
+    );
+
+    if (result.rows.length === 0) {
+        res.status(404);
+        throw new Error('Complaint not found.');
+    }
+
+    const complaint = result.rows[0];
+
+    const historyResult = await query(
+        `SELECT action, performed_by, remarks, created_at
+         FROM complaint_history
+         WHERE complaint_id = $1
+         ORDER BY created_at ASC`,
+        [complaint.id]
+    );
+
+    res.json({ message: 'Complaint found.', complaint, history: historyResult.rows });
+});
+
+const submitUserVerification = asyncHandler(async (req, res) => {
+    const complaintId = parseInt(req.params.id, 10);
+    const userId = req.user.id;
+    const { confirmed, remarks } = req.body;
+
+    if (typeof confirmed !== 'boolean') {
+        res.status(400);
+        throw new Error('"confirmed" must be true or false.');
+    }
+
+    const compRes = await query('SELECT * FROM complaints WHERE id = $1', [complaintId]);
+
+    if (compRes.rows.length === 0) {
+        res.status(404);
+        throw new Error('Complaint not found.');
+    }
+
+    const complaint = compRes.rows[0];
+
+    if (complaint.user_id !== userId) {
+        res.status(403);
+        throw new Error('You are not authorized to verify this complaint.');
+    }
+
+    if ((complaint.status || '').toLowerCase() !== 'waiting for user verification') {
+        res.status(400);
+        throw new Error('This complaint is not currently awaiting your verification.');
+    }
+
+    const cleanRemarks = (remarks || '').trim() || null;
+    const newStatus = confirmed ? 'Resolved' : 'Reopened';
+
+    const updateResult = await query(
+        `UPDATE complaints
+         SET status = $1,
+             user_verification_response = $2,
+             user_verification_remarks = $3,
+             user_verified_at = NOW(),
+             verified_by_user = $2,
+             updated_at = NOW()
+         WHERE id = $4
+         RETURNING *`,
+        [newStatus, confirmed, cleanRemarks, complaintId]
+    );
+
+    await logHistory(
+        complaintId,
+        confirmed ? 'User Confirmed Resolution' : 'User Rejected Resolution',
+        req.user.name,
+        cleanRemarks || (confirmed ? 'User confirmed the issue is resolved.' : 'User reported the issue is not resolved.')
+    );
+
+    try {
+        await query(
+            `INSERT INTO notifications (user_id, complaint_id, message)
+             VALUES ($1, $2, $3)`,
+            [
+                userId,
+                complaintId,
+                confirmed
+                    ? `You confirmed complaint ${complaint.ticket_number} is resolved. Awaiting admin closure.`
+                    : `You reported complaint ${complaint.ticket_number} is not resolved. It has been sent back for further action.`
+            ]
+        );
+    } catch (n) {
+        console.warn('[verify] notification non-fatal:', n.message);
+    }
+
+    res.json({
+        message: confirmed
+            ? 'Thank you! Your confirmation has been recorded. The admin will close this complaint shortly.'
+            : 'Your response has been recorded. This complaint has been reopened for further action.',
+        complaint: updateResult.rows[0]
+    });
+});
+
+module.exports = {
+    createComplaint,
+    getUserComplaints,
+    getComplaintById,
+    submitUserVerification,
+    logHistory
+};

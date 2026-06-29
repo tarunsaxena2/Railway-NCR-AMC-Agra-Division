@@ -1,0 +1,402 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agra Cantt Division - Railway Complaint Management System</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <img src="./Indian_Railways.newlogo.png" alt="Indian Railways Logo" class="logo">
+                    <div class="header-text">
+                        <h1>भारतीय रेल</h1>
+                        <p> North Central Railways</p>
+                        <span>Agra Division </span>
+                        
+                    </div>
+                </div>
+                <nav class="nav">
+                    <ul>
+                        <li><a href="#home" class="nav-link active">Home</a></li>
+                        <li><a href="#about" class="nav-link">About</a></li>
+                        <li><a href="#contact" class="nav-link">Contact</a></li>
+                        <li><a href="#" class="nav-link" onclick="openLogin()"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                        <li><a href="#" class="nav-link" onclick="openSignup()"><i class="fas fa-user-plus"></i> Register</a></li>
+                    </ul>
+                </nav>
+                
+                <div class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="#home" class="mobile-nav-link">Home</a>
+            <a href="#about" class="mobile-nav-link">About</a>
+            <a href="#contact" class="mobile-nav-link">Contact</a>
+            <a href="#" class="mobile-nav-link" onclick="toggleMobileMenu(); openLogin();"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="#" class="mobile-nav-link" onclick="toggleMobileMenu(); openSignup();"><i class="fas fa-user-plus"></i> Register</a>
+        </div>
+    </div>
+
+    <section class="hero" id="home">
+        
+        <div class="hero-title-banner">
+            <h2>Digital Complaint Management System</h2>
+            <div class="subtitle">(Computer and Peripheral)</div>
+            <p>Agra Division</p>
+        </div>
+
+        <div class="carousel-container">
+            <div class="carousel-slide active">
+                <img src="./AgraCantt.png" alt="Agra Cantt Station">
+            </div>
+        </div>
+        
+    </section>
+
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>About Agra Division</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Ensuring every click counts on the tracks. Our AMC Complaint Management System keeps Indian Railways' essential IT hardware – from keyboards to printers – performing flawlessly, minimizing downtime and maximizing productivity.</p>
+                    <p>With our new Digital Complaint Management System, we ensure prompt resolution of device malfunctions and maintenance issues through our network of registered certified technicians.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Get Started?</h2>
+                <p>Join our network of registered partners and streamline your railway device maintenance process</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary btn-large" onclick="openSignup()">
+                        <i class="fas fa-user-plus"></i>
+                        Register Now
+                    </button>
+                    <button class="btn btn-outline btn-large" onclick="openLogin()">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login to Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="./xyz.png" alt="Indian Railways" style="height: 50px; width: auto;">
+                        <div>
+                            <h4>Indian Railways</h4>
+                            <p>Agra Division</p>
+                        </div>
+                    </div>
+                    <p>Committed to excellence in railway services and customer satisfaction through innovative digital solutions.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-map-marker-alt"></i>Office address :<br>DRM office complex North central Railways, Agra Division</p>
+                        <p><i class="fas fa-phone"></i> +91-562-XXX-XXXX</p>
+                        <p><i class="fas fa-envelope"></i>edpmagra@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; Design and Developed by IT-cell/Agra</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="page-overlay" id="loginPage">
+        <div class="page-content">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <button class="close-btn" onclick="closePage('loginPage')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <h2>Login to Your Account</h2>
+                    <p>Access your complaint management dashboard</p>
+                </div>
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox">
+                            <input type="checkbox" name="remember">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-link">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Login</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="#" onclick="switchToSignup()">Sign up here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-overlay" id="signupPage">
+        <div class="page-content">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <button class="close-btn" onclick="closePage('signupPage')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <h2>Create New Account</h2>
+                    <p>Register your company for complaint management access</p>
+                </div>
+                <form class="auth-form" id="signupForm">
+                    <div class="form-group">
+                        <label for="companyName">Company Name</label>
+                        <input type="text" id="companyName" name="companyName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox">
+                            <input type="checkbox" name="terms" required>
+                            <span class="checkmark"></span>
+                            I agree to the <a href="#">Terms & Conditions</a>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="#" onclick="switchToLogin()">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-overlay" id="dashboardPage">
+        <div class="page-content full-page">
+            <div class="dashboard-container">
+                <div class="dashboard-header">
+                    <div class="dashboard-title">
+                        <h2>Welcome to Your Dashboard</h2>
+                        <p>Manage your railway device complaints efficiently</p>
+                    </div>
+                    <button class="btn btn-outline" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <h3>Register New Complaint</h3>
+                        <p>Submit a new complaint for malfunctioning railway devices</p>
+                        <button class="btn btn-primary" onclick="openComplaintForm()">
+                            Register Complaint
+                        </button>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Check Complaint Status</h3>
+                        <p>Track the progress of your submitted complaints</p>
+                        <button class="btn btn-outline" onclick="checkStatus()">
+                            Check Status
+                        </button>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h3>Complaint History</h3>
+                        <p>View all your previous complaints and their resolutions</p>
+                        <button class="btn btn-outline" onclick="viewHistory()">
+                            View History
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-overlay" id="complaintPage">
+        <div class="page-content full-page">
+            <div class="complaint-container">
+                <div class="complaint-header">
+                    <button class="close-btn" onclick="closePage('complaintPage')">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                    <h2>Register New Complaint</h2>
+                    <p>Fill in the details below to submit your complaint</p>
+                </div>
+                <form class="complaint-form" id="complaintForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="deviceId">Device ID</label>
+                            <input type="text" id="deviceId" name="deviceId" placeholder="Enter device ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="complaintDate">Date</label>
+                            <input type="date" id="complaintDate" name="date" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="location">Location</label>
+                            <input type="text" id="location" name="location" placeholder="Enter location" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="priority">Priority</label>
+                            <select id="priority" name="priority" required>
+                                <option value="">Select Priority</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="issueDescription">Issue Description</label>
+                        <textarea id="issueDescription" name="description" placeholder="Describe the issue in detail" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUpload">Upload Image (Optional)</label>
+                        <input type="file" id="imageUpload" name="image" accept="image/*">
+                    </div>
+                    <div class="warranty-check">
+                        <button type="button" class="btn btn-outline" onclick="checkWarranty()">
+                            <i class="fas fa-shield-alt"></i>
+                            Check Warranty Status
+                        </button>
+                        <div id="warrantyResult" class="warranty-result"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Complaint
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-overlay" id="contactPage">
+        <div class="page-content full-page">
+            <div class="contact-container">
+                <div class="contact-header">
+                    <button class="close-btn" onclick="closePage('contactPage')">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </button>
+                    <h2>Contact Agra Cantt Division</h2>
+                    <p>Get in touch with us for any queries or support</p>
+                </div>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h3>Address</h3>
+                            <p>Agra Cantt Railway Station<br>Agra, Uttar Pradesh<br>PIN: 282001</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <h3>Phone</h3>
+                            <p>Helpline: +91-562-XXX-XXXX<br>Emergency: 139<br>Station: +91-562-XXX-YYYY</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3>Email</h3>
+                            <p>support@agracantt.indianrail.gov.in<br>complaints@agracantt.indianrail.gov.in</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h3>Working Hours</h3>
+                            <p>24/7 Emergency Support<br>Office: 9:00 AM - 6:00 PM<br>Monday to Friday</p>
+                        </div>
+                    </div>
+                    <div class="contact-form">
+                        <h3>Send us a Message</h3>
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="contactName">Full Name</label>
+                                <input type="text" id="contactName" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactEmail">Email</label>
+                                <input type="email" id="contactEmail" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactSubject">Subject</label>
+                                <input type="text" id="contactSubject" name="subject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactMessage">Message</label>
+                                <textarea id="contactMessage" name="message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

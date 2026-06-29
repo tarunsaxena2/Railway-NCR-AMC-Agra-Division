@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>North Central Railway - Sign Up</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+
+    background:url('sign-up.png') center center/cover no-repeat fixed;
+    position:relative;
+    
+    /* ADDED: 12px blue frame around the edges of the background photo */
+    border: 12px solid #2563EB;
+}
+
+body::before{
+    content:'';
+    position:absolute;
+    /* ADJUSTED: Keeps the dark tint flush inside the perimeter of the blue frame */
+    inset:0;
+    background:rgba(0,0,0,.55);
+}
+
+.container{
+    position:relative;
+    z-index:2;
+
+    width:100%;
+    max-width:520px;
+
+    padding:40px;
+
+    border-radius:25px;
+
+    background:rgba(255,255,255,.12);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.2);
+
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo{
+    font-size:60px;
+    margin-bottom:10px;
+}
+
+.header h1{
+    color:white;
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.header p{
+    color:#ddd;
+}
+
+.role-title{
+    text-align:center;
+    font-weight:600;
+    margin-bottom:10px;
+    color:white;
+}
+
+.role-selector{
+    display:flex;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.role-btn{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,.15);
+    color:white;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+}
+
+.role-btn:hover{
+    transform:translateY(-2px);
+}
+
+/* UPDATED: Active button changed from yellow to vivid blue */
+.role-btn.active{
+    background:#2563EB;
+    color:white;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:600;
+    color:white;
+}
+
+/* Container to stack input and eye icon relative to each other */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-group input{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,.95);
+}
+
+/* Offset padding for the password box so text does not bleed under the view icon */
+.password-wrapper input {
+    padding-right: 45px;
+}
+
+/* UPDATED: Input focus ring changed from yellow glow to blue glow */
+.form-group input:focus{
+    outline:none;
+    box-shadow:0 0 0 3px rgba(37,99,235,.5);
+}
+
+/* Style field highlight configurations */
+.error-field {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.7) !important;
+}
+
+/* Toggle eye button custom element placement rules */
+.eye-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #4b5563;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.eye-btn:hover {
+    color: #111827;
+}
+
+/* Password Tracker and Visual Meter Grid Styles */
+#strengthWrap {
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.meter-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+#strengthBar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s ease, background-color 0.4s ease;
+}
+
+#strengthLabel {
+    font-size: 13px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.rules-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.rules-list li {
+    font-size: 12px;
+    color: #ef4444; /* Default to red/failed state */
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.rules-list li.pass {
+    color: #16a34a; /* Switches to green when satisfied */
+}
+
+/* Signup Button */
+/* UPDATED: Changed gradient from yellow to professional railway blue gradient */
+.signup-btn{
+    width:100%;
+    padding:15px;
+
+    border:none;
+    border-radius:12px;
+
+    background:linear-gradient(
+        135deg,
+        #1E40AF,
+        #2563EB
+    );
+
+    color:white;
+
+    font-size:16px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.signup-btn:hover{
+    transform:translateY(-3px);
+    background: linear-gradient(135deg, #1D4ED8, #3B82F6);
+}
+
+/* Message Styles matching js success/error handlers */
+.message{
+    text-align:center;
+    margin-top:15px;
+    color:white;
+    font-weight: 600;
+}
+.message.error {
+    color: #ff6b6b;
+}
+.message.success {
+    color: #2ecc71;
+}
+
+.links{
+    text-align:center;
+    margin-top:20px;
+}
+
+.links a{
+    text-decoration:none;
+    color:white;
+    font-weight:600;
+}
+
+.links a:hover{
+    text-decoration:underline;
+}
+
+.footer{
+    text-align:center;
+    margin-top:25px;
+    font-size:12px;
+    color:#ddd;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div class="logo"></div>
+
+        <h1>North Central Railway</h1>
+
+        <p>AMC Complaint Management System</p>
+
+    </div>
+
+    <div class="role-title">
+        Register As
+    </div>
+
+    <div class="role-selector">
+
+        <button
+            type="button"
+            class="role-btn active"
+            data-role="user">
+            User
+        </button>
+
+        <button
+            type="button"
+            class="role-btn"
+            data-role="technician">
+            Technician
+        </button>
+
+        <button
+            type="button"
+            class="role-btn"
+            data-role="admin">
+            Admin
+        </button>
+
+    </div>
+
+    <form id="signupForm">
+
+        <input
+            type="hidden"
+            id="role"
+            value="user">
+
+        <div class="form-group">
+
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Enter your full name"
+                required>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Email Address</label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                required>
+
+        </div>
+
+        <div class="form-group" id="phoneGroup">
+
+            <label>Phone Number</label>
+
+            <input
+                type="tel"
+                id="phone"
+                maxlength="10"
+                placeholder="Enter phone number"
+                required
+                inputmode="numeric">
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Password</label>
+
+            <div class="password-wrapper">
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Create password"
+                    required>
+                <button type="button" id="eyeBtn" class="eye-btn" aria-label="Show password">
+                    <i id="eyeIcon" class="fa-regular fa-eye"></i>
+                </button>
+            </div>
+
+            <div id="strengthWrap" style="display: none;">
+                <span id="strengthLabel">🔴 Weak</span>
+                <div class="meter-container">
+                    <div id="strengthBar"></div>
+                </div>
+                <ul class="rules-list">
+                    <li id="chk-length"><i class="fa-solid fa-circle-xmark"></i> At least 8 characters</li>
+                    <li id="chk-lower"><i class="fa-solid fa-circle-xmark"></i> At least 1 lowercase letter</li>
+                    <li id="chk-upper"><i class="fa-solid fa-circle-xmark"></i> At least 1 uppercase letter</li>
+                    <li id="chk-number"><i class="fa-solid fa-circle-xmark"></i> At least 1 numeral</li>
+                    <li id="chk-special"><i class="fa-solid fa-circle-xmark"></i> At least 1 special character</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <button
+            type="submit"
+            id="submitBtn"
+            class="signup-btn">
+            Create Account
+        </button>
+
+    </form>
+
+    <div id="signupMessage" class="message"></div>
+
+    <div class="links">
+        <a href="#" id="loginLink">Already Have Account? Login</a>
+    </div>
+
+    <div class="footer">
+        Authorized Registration Only • North Central Railway
+    </div>
+
+</div>
+
+<script>
+// Pre-select role from URL param (e.g. ?role=technician)
+const urlParams = new URLSearchParams(window.location.search);
+const preRole = urlParams.get('role');
+
+const roleBtns = document.querySelectorAll(".role-btn");
+const roleInput = document.getElementById("role");
+
+function togglePhoneField(role) {
+    const phoneGroup = document.getElementById("phoneGroup");
+    const phoneInput = document.getElementById("phone");
+    if (!phoneGroup || !phoneInput) return;
+    if (role === "admin") {
+        phoneGroup.style.display = "none";
+        phoneInput.required = false;
+        phoneInput.value = "";
+    } else {
+        phoneGroup.style.display = "block";
+        phoneInput.required = true;
+    }
+}
+
+roleBtns.forEach(btn => {
+    if (preRole && btn.dataset.role === preRole) {
+        roleBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        roleInput.value = preRole;
+        togglePhoneField(preRole);
+    }
+    btn.addEventListener("click", () => {
+        roleBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        roleInput.value = btn.dataset.role;
+        togglePhoneField(btn.dataset.role);
+    });
+});
+
+// Run on page load in case no URL param (default role = user, phone visible)
+togglePhoneField(roleInput.value || "user");
+
+// Navigate to login preserving the currently selected role
+document.getElementById("loginLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    const currentRole = roleInput.value || "user";
+    window.location.href = "login.html?role=" + currentRole;
+});
+</script>
+
+<script src="./js/common.js"></script>
+<script src="./js/signup.js"></script>
+
+</body>
+</html>

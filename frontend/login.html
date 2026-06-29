@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>North Central Railway - Login</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    position:relative;
+
+    background:url('loginimage.png') center center/cover no-repeat fixed;
+    
+    /* ADDED: 12px blue frame around the edges of the background photo */
+    border: 12px solid #2563EB;
+}
+
+/* Dark Overlay */
+body::before{
+    content:"";
+    position:absolute;
+    /* ADJUSTED: Keeps the dark tint flush inside the perimeter of the blue frame */
+    inset:0;
+    background:rgba(0,0,0,0.55);
+}
+
+/* Login Card */
+.container{
+    position:relative;
+    z-index:2;
+
+    width:100%;
+    max-width:520px;
+
+    padding:40px;
+
+    border-radius:25px;
+
+    background:rgba(255,255,255,0.12);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,0.2);
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,.35);
+}
+
+/* Header */
+.railway-header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.railway-header h1{
+    color:white;
+    font-size:32px;
+    margin-bottom:8px;
+}
+
+.railway-header p{
+    color:#ddd;
+    font-size:14px;
+}
+
+.logo{
+    font-size:60px;
+    margin-bottom:10px;
+}
+
+/* Role Section */
+.role-title{
+    text-align:center;
+    color:white;
+    margin-bottom:12px;
+    font-weight:600;
+}
+
+.role-selector{
+    display:flex;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.role-btn{
+    flex:1;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,.15);
+
+    color:white;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.role-btn:hover{
+    transform:translateY(-2px);
+}
+
+/* UPDATED: Active button changed from yellow to vivid blue */
+.role-btn.active{
+    background:#2563EB;
+    color:white;
+}
+
+/* Form */
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    color:white;
+    margin-bottom:6px;
+    font-weight:600;
+}
+
+.form-group input{
+    width:100%;
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,.95);
+
+    font-size:15px;
+}
+
+/* UPDATED: Input focus ring changed from yellow glow to blue glow */
+.form-group input:focus{
+    outline:none;
+
+    box-shadow:
+    0 0 0 3px rgba(37,99,235,.5);
+}
+
+/* Password Validation Tracker Styling */
+.requirements-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.requirements-list li {
+    margin-bottom: 4px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+/* Red for unmet criteria, Green for met criteria */
+.criterion-invalid {
+    color: #ff6b6b;
+}
+
+.criterion-valid {
+    color: #2ecc71;
+}
+
+/* Login Button */
+/* UPDATED: Changed gradient from yellow to professional railway blue gradient */
+.login-btn{
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #1E40AF,
+        #2563EB
+    );
+
+    color:white;
+
+    font-size:16px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.login-btn:hover{
+    transform:translateY(-3px);
+    background: linear-gradient(135deg, #1D4ED8, #3B82F6);
+}
+
+/* Message */
+.message{
+    text-align:center;
+    color:white;
+    margin-top:15px;
+}
+
+/* Links */
+.links{
+    text-align:center;
+    margin-top:20px;
+}
+
+.links a{
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.links a:hover{
+    text-decoration:underline;
+}
+
+/* Footer */
+.footer-note{
+    margin-top:25px;
+    text-align:center;
+    color:#ddd;
+    font-size:12px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="railway-header">
+
+        <div class="logo"></div>
+
+        <h1>North Central Railway</h1>
+
+        <p>AMC Complaint Management System</p>
+
+    </div>
+
+    <div class="role-title">
+        Login As
+    </div>
+
+    <div class="role-selector">
+
+        <button type="button"
+                class="role-btn active"
+                data-role="user">
+            User
+        </button>
+
+        <button type="button"
+                class="role-btn"
+                data-role="technician">
+            Technician
+        </button>
+
+        <button type="button"
+                class="role-btn"
+                data-role="admin">
+            Admin
+        </button>
+
+    </div>
+
+    <form id="loginForm">
+
+        <input
+            type="hidden"
+            id="role"
+            value="user">
+
+        <div class="form-group">
+
+            <label>Email Address</label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                required>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                required>
+                
+            <ul class="requirements-list" id="password-requirements">
+                <li id="length-req" class="criterion-invalid">✕ At least 8 characters</li>
+                <li id="lowercase-req" class="criterion-invalid">✕ At least 1 lowercase letter</li>
+                <li id="uppercase-req" class="criterion-invalid">✕ At least 1 uppercase letter</li>
+                <li id="number-req" class="criterion-invalid">✕ At least 1 numeral</li>
+                <li id="special-req" class="criterion-invalid">✕ At least 1 special character</li>
+            </ul>
+
+        </div>
+
+        <button
+            type="submit"
+            class="login-btn">
+            Sign In
+        </button>
+
+    </form>
+
+    <div id="loginMessage" class="message"></div>
+
+    <div class="links">
+        <a href="forgot-password.html">Forgot Password?</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="#" id="createAccountLink">Create New Account</a>
+    </div>
+
+    <div class="footer-note">
+        North Central Railway • Authorized Access Only
+    </div>
+
+</div>
+
+<script>
+// Pre-select role from URL param (e.g. ?role=technician)
+const urlParams = new URLSearchParams(window.location.search);
+const preRole = urlParams.get('role');
+
+const roleBtns = document.querySelectorAll(".role-btn");
+const roleInput = document.getElementById("role");
+
+roleBtns.forEach(btn => {
+    if (preRole && btn.dataset.role === preRole) {
+        roleBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        roleInput.value = preRole;
+    }
+    btn.addEventListener("click", () => {
+        roleBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        roleInput.value = btn.dataset.role;
+    });
+});
+
+// Navigate to signup preserving the currently selected role
+document.getElementById("createAccountLink").addEventListener("click", (e) => {
+    e.preventDefault();
+    const currentRole = roleInput.value || "user";
+    window.location.href = "signup.html?role=" + currentRole;
+});
+</script>
+
+<script src="./js/common.js"></script>
+<script src="./js/login.js"></script>
+
+</body>
+</html>
