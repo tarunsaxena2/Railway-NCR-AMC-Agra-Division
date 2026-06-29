@@ -5,300 +5,296 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Technician Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
-        }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
 
-        body {
-            background: #f5f9ff !important;
-            min-height: 100vh;
-            color: #1e293b;
-        }
+body{
+    min-height:100vh;
+    color:#0f172a;
+    background:
+        linear-gradient(rgba(239,246,255,.72),rgba(239,246,255,.86)),
+        url("images/railway-bg.jpg");
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
 
-        .header {
-            width: 100%;
-            background: linear-gradient(135deg, #0052cc, #007bff);
-            color: white;
-            padding: 16px 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,.15);
-            position: relative;
-            z-index: 20;
-        }
+.header{
+    background:linear-gradient(135deg,#003ea8,#0066ff,#0ea5e9);
+    color:white;
+    padding:20px 42px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 14px 40px rgba(0,45,120,.35);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
 
-        .header h1 {
-            font-size: 28px;
-        }
+.header h1{font-size:31px;font-weight:850}
+.header h1::before{content:"🛠️ ";}
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+.header-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#techName{font-weight:800;background:rgba(255,255,255,.15);padding:10px 16px;border-radius:999px}
 
-        .edit-profile-btn {
-            border: none;
-            background: #10b981;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-        }
+.edit-profile-btn,.logout-btn{
+    border:none;
+    padding:11px 18px;
+    border-radius:13px;
+    cursor:pointer;
+    font-weight:800;
+    transition:.25s;
+}
 
-        .edit-profile-btn:hover {
-            background: #059669;
-        }
+.edit-profile-btn{background:linear-gradient(135deg,#10b981,#14b8a6);color:white}
+.logout-btn{background:white;color:#1554d1}
+.edit-profile-btn:hover,.logout-btn:hover{transform:translateY(-3px)}
 
-        .logout-btn {
-            border: none;
-            background: white;
-            color: #2563eb;
-            padding: 10px 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-        }
+.railway-track-container{
+    display:none;
+    width:100%;
+    background:rgba(15,23,42,.88);
+    backdrop-filter:blur(8px);
+    border-bottom:4px solid #334155;
+    overflow:hidden;
+    white-space:nowrap;
+    padding:12px 0;
+}
 
-        .logout-btn:hover {
-            background: #e0ecff;
-        }
+.message-train{
+    display:inline-flex;
+    align-items:center;
+    padding-left:100%;
+    animation:trainRunRoute 24s linear infinite;
+}
 
-        /* Announcement fixed position directly below header */
-        .railway-track-container {
-            display: none;
-            width: 100%;
-            background: #1e293b;
-            border-bottom: 4px solid #475569;
-            overflow: hidden;
-            white-space: nowrap;
-            padding: 8px 0;
-            box-shadow: inset 0 -4px 10px rgba(0,0,0,0.3);
-            position: relative;
-            z-index: 10;
-        }
+.train-engine{font-size:31px;margin-right:12px}
+#trainWagonsWrapper{display:inline-flex;align-items:center;gap:14px}
 
-        .message-train {
-            display: inline-flex;
-            align-items: center;
-            padding-left: 100%;
-            animation: trainRunRoute 22s linear infinite;
-        }
+.train-wagon{
+    background:linear-gradient(135deg,#0f766e,#16a34a);
+    color:white;
+    font-size:14px;
+    font-weight:850;
+    padding:10px 20px;
+    border-radius:14px;
+    box-shadow:0 10px 24px rgba(0,0,0,.28);
+}
 
-        .train-engine {
-            font-size: 24px;
-            margin-right: 8px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-            animation: engineVibration 0.15s linear infinite;
-        }
+@keyframes trainRunRoute{
+    from{transform:translateX(0)}
+    to{transform:translateX(-100%)}
+}
 
-        #trainWagonsWrapper {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-        }
+.container{
+    max-width:1180px;
+    margin:0 auto;
+    padding:36px 28px;
+}
 
-        .train-wagon {
-            background: #22c55e;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 14px;
-            padding: 7px 16px;
-            border-radius: 6px;
-            border: 2px solid #15803d;
-            border-bottom: 4px solid #166534;
-            position: relative;
-            margin-right: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-        }
+.cards{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(180px,1fr))!important;
+    gap:24px!important;
+    margin-bottom:34px;
+}
 
-        .train-wagon::after {
-            content: '';
-            position: absolute;
-            right: -14px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 12px;
-            height: 4px;
-            background: #475569;
-        }
+.card{
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(16px);
+    border-radius:26px;
+    padding:30px;
+    min-height:140px;
+    box-shadow:0 18px 45px rgba(37,99,235,.18);
+    border:1px solid rgba(255,255,255,.65);
+    transition:.35s;
+    position:relative;
+    overflow:hidden;
+}
 
-        .train-wagon:last-child::after {
-            display: none;
-        }
+.card::before{
+    content:"";
+    position:absolute;
+    width:130px;
+    height:130px;
+    right:-45px;
+    bottom:-45px;
+    background:linear-gradient(135deg,rgba(37,99,235,.14),rgba(14,165,233,.05));
+    border-radius:50%;
+}
 
-        @keyframes trainRunRoute {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 26px 60px rgba(37,99,235,.28);
+}
 
-        @keyframes engineVibration {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-1px); }
-        }
+.card h2{
+    font-size:44px;
+    color:#0057ff;
+    font-weight:900;
+    margin-bottom:8px;
+}
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 30px;
-        }
+.card p{
+    color:#334155;
+    font-size:15px;
+    font-weight:800;
+}
 
-        .cards {
-            display: grid !important;
-            grid-template-columns: repeat(4, minmax(180px, 1fr)) !important;
-            gap: 20px !important;
-            width: 100%;
-            margin-bottom: 30px;
-        }
+#attendanceStatus{
+    margin:20px 0;
+    padding:16px 20px;
+    background:rgba(220,252,231,.95);
+    border-left:7px solid #16a34a;
+    border-radius:18px;
+    display:none;
+    font-weight:850;
+    color:#166534;
+}
 
-        .card {
-            background: white;
-            border-radius: 18px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0,123,255,.12);
-            transition: .3s;
-            border-left: 6px solid #007bff;
-            width: 100%;
-            min-height: 120px;
-        }
+.table-container{
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(18px);
+    border-radius:30px;
+    padding:30px;
+    box-shadow:0 24px 60px rgba(15,23,42,.18);
+    border:1px solid rgba(255,255,255,.75);
+    overflow:hidden;
+}
 
-        .card:hover {
-            transform: translateY(-5px);
-        }
+.table-title{
+    color:#0647b7;
+    font-size:26px;
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
 
-        .card h2 {
-            font-size: 34px;
-            color: #007bff;
-            margin-bottom: 10px;
-        }
+.table-title::before{content:"📋"}
 
-        .card p {
-            color: #666;
-            font-weight: 600;
-        }
+table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0 13px;
+    table-layout:fixed;
+}
 
-        #attendanceStatus {
-            margin: 20px 0;
-            padding: 15px;
-            background: #e8f5e9;
-            border-radius: 10px;
-            display: none;
-            font-weight: bold;
-            color: #2e7d32;
-        }
+thead th{
+    background:linear-gradient(135deg,#0057ff,#0ea5e9);
+    color:white;
+    padding:17px;
+    text-align:left;
+    font-size:14px;
+}
 
-        .table-container {
-            width: 100%;
-            margin-top: 20px;
-            background: white;
-            border-radius: 18px;
-            padding: 20px;
-            box-shadow: 0 8px 25px rgba(0,123,255,.12);
-        }
+thead th:first-child{border-radius:16px 0 0 16px}
+thead th:last-child{border-radius:0 16px 16px 0}
 
-        .table-title {
-            margin-bottom: 15px;
-            color: #0052cc;
-        }
+tbody tr{
+    background:rgba(248,251,255,.95);
+    box-shadow:0 10px 24px rgba(15,23,42,.08);
+    transition:.25s;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
+tbody tr:hover{
+    transform:scale(1.012);
+    background:white;
+}
 
-        th {
-            background: #007bff;
-            color: white;
-            padding: 14px;
-            text-align: left;
-            font-weight: 600;
-        }
+td{
+    padding:19px 17px;
+    border-top:1px solid #dbeafe;
+    border-bottom:1px solid #dbeafe;
+    vertical-align:middle;
+    word-wrap:break-word;
+}
 
-        td {
-            padding: 14px;
-            border-bottom: 1px solid #eee;
-            text-align: left;
-            vertical-align: middle;
-            word-wrap: break-word;
-        }
+td:first-child{
+    border-left:1px solid #dbeafe;
+    border-radius:16px 0 0 16px;
+    font-weight:900;
+    color:#0754d8;
+}
 
-        table th:nth-child(1), table td:nth-child(1) { width: 18%; }
-        table th:nth-child(2), table td:nth-child(2) { width: 42%; }
-        table th:nth-child(3), table td:nth-child(3) { width: 20%; }
-        table th:nth-child(4), table td:nth-child(4) { width: 20%; }
+td:last-child{
+    border-right:1px solid #dbeafe;
+    border-radius:0 16px 16px 0;
+}
 
-        tr:hover {
-            background: #f8fbff;
-        }
+table th:nth-child(1),table td:nth-child(1){width:18%}
+table th:nth-child(2),table td:nth-child(2){width:42%}
+table th:nth-child(3),table td:nth-child(3){width:20%}
+table th:nth-child(4),table td:nth-child(4){width:20%}
 
-        .accept-btn {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
+.accept-btn,.resolve-btn{
+    border:none;
+    color:white;
+    padding:11px 20px;
+    border-radius:14px;
+    cursor:pointer;
+    font-weight:850;
+    transition:.25s;
+}
 
-        .resolve-btn {
-            background: #00b894;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
+.accept-btn{background:linear-gradient(135deg,#2563eb,#0ea5e9)}
+.resolve-btn{background:linear-gradient(135deg,#10b981,#059669)}
+.accept-btn:hover,.resolve-btn:hover{transform:translateY(-3px)}
 
-        .status-pending { color: #ff9800; font-weight: bold; text-transform: capitalize; }
-        .status-assigned { color: #007bff; font-weight: bold; text-transform: capitalize; }
-        .status-accepted { color: #f59e0b; font-weight: bold; text-transform: capitalize; }
-        .status-resolved { color: #00b894; font-weight: bold; text-transform: capitalize; }
-        .status-closed { color: #22c55e; font-weight: bold; text-transform: capitalize; }
+.status-pending,.status-assigned,.status-accepted,.status-resolved,.status-closed{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:999px;
+    font-weight:850;
+    font-size:13px;
+}
 
-        @media (max-width: 900px) {
-            .header {
-                flex-direction: column;
-                gap: 12px;
-                text-align: center;
-            }
+.status-pending{background:#fef3c7;color:#b45309}
+.status-assigned{background:#dbeafe;color:#1d4ed8}
+.status-accepted{background:#ede9fe;color:#7c3aed}
+.status-resolved{background:#d1fae5;color:#047857}
+.status-closed{background:#dcfce7;color:#15803d}
 
-            .header-right {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
+#customProfileModal>div,#customRemarksModal>div,#attendanceModal>div{
+    border-radius:24px!important;
+    box-shadow:0 30px 80px rgba(0,0,0,.32)!important;
+}
 
-            .cards {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
+input,textarea{outline:none}
+input:focus,textarea:focus{
+    border-color:#2563eb!important;
+    box-shadow:0 0 0 4px rgba(37,99,235,.13);
+}
 
-            table {
-                min-width: 750px;
-            }
+@media(max-width:900px){
+    .header{flex-direction:column;gap:14px;text-align:center}
+    .header-right{justify-content:center}
+    .cards{grid-template-columns:repeat(2,1fr)!important}
+    .table-container{overflow-x:auto}
+    table{min-width:760px}
+}
 
-            .table-container {
-                overflow-x: auto;
-            }
-        }
+@media(max-width:600px){
+    .container{padding:22px 16px}
+    .cards{grid-template-columns:1fr!important}
+    .header h1{font-size:24px}
+}
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
 
-        @media (max-width: 600px) {
-            .cards {
-                grid-template-columns: 1fr !important;
-            }
+    background-image:
+       
+        url("tech.png");
 
-            .container {
-                padding: 18px;
-            }
-        }
-    </style>
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+</style>
 </head>
 <body>
 

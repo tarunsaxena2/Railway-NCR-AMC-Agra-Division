@@ -453,9 +453,7 @@ async function checkSystemAnnouncements() {
         const container = document.getElementById("announcementContainer");
         const wagonsWrapper = document.getElementById("trainWagonsWrapper");
 
-        if (!container || !wagonsWrapper) {
-            return;
-        }
+        if (!container || !wagonsWrapper) return;
 
         if (data.success && data.announcement) {
             const coaches = data.announcement
@@ -463,11 +461,24 @@ async function checkSystemAnnouncements() {
                 .map(item => item.trim())
                 .filter(item => item !== "");
 
-            wagonsWrapper.innerHTML = coaches.map(text => `
-                <div class="train-wagon">
-                    ⚠️ ${text}
-                </div>
-            `).join("");
+            wagonsWrapper.innerHTML =
+                coaches.map(text => `
+                    <div class="train-wagon">
+                        ⚠️ ${text}
+                    </div>
+                `).join("") +
+
+                (data.pdf_url
+                    ? `
+                    <div class="train-wagon" style="background:#2563eb;">
+                        📄 <a href="${BASE_URL}${data.pdf_url}"
+                              target="_blank"
+                              style="color:white;font-weight:bold;text-decoration:none;">
+                            ${data.pdf_name || "Open PDF"}
+                        </a>
+                    </div>
+                    `
+                    : "");
 
             container.style.display = "block";
         } else {

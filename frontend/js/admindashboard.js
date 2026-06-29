@@ -505,6 +505,7 @@ async function publishNotice() {
     const monthsEl = document.getElementById('noticeMonths');
     const daysEl = document.getElementById('noticeDays');
     const minutesEl = document.getElementById('noticeMinutes');
+    const pdfEl = document.getElementById('noticePdf');
 
     if (!messageEl || !targetEl || !monthsEl || !daysEl || !minutesEl) {
         alert("Notice form not found.");
@@ -521,18 +522,23 @@ async function publishNotice() {
         alert("⚠️ Please enter an announcement message first.");
         return;
     }
+const formData = new FormData();
+formData.append("message", message);
+formData.append("target_role", target_role);
+formData.append("duration_months", duration_months);
+formData.append("duration_days", duration_days);
+formData.append("duration_minutes", duration_minutes);
 
+if (pdfEl && pdfEl.files[0]) {
+    formData.append("pdf", pdfEl.files[0]);
+}
     try {
         const response = await fetch(`${BASE_URL}/api/announcements/create`, {
             method: 'POST',
-            headers: authHeaders(),
-            body: JSON.stringify({
-                message,
-                target_role,
-                duration_months,
-                duration_days,
-                duration_minutes
-            })
+            headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`
+},
+body: formData
         });
 
         const data = await response.json();

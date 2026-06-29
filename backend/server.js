@@ -46,13 +46,26 @@ CREATE TABLE IF NOT EXISTS admin_announcements (
     message TEXT NOT NULL,
     target_role VARCHAR(20) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    expires_at TIMESTAMP NOT NULL
+    expires_at TIMESTAMP NOT NULL,
+    pdf_url TEXT,
+    pdf_name TEXT
 );`;
 
 pool.query(createAnnouncementsTableQuery)
-    .then(() => console.log("Admin announcements table checked/created successfully."))
-    .catch((err) => console.error("Error creating announcements table:", err.message));
+    .then(async () => {
+        await pool.query(`
+            ALTER TABLE admin_announcements 
+            ADD COLUMN IF NOT EXISTS pdf_url TEXT;
+        `);
 
+        await pool.query(`
+            ALTER TABLE admin_announcements 
+            ADD COLUMN IF NOT EXISTS pdf_name TEXT;
+        `);
+
+        console.log("Admin announcements table checked/updated successfully.");
+    })
+    .catch((err) => console.error("Error creating/updating announcements table:", err.message));
 
 // --- Routes ---
 const authRoutes = require('./routes/auth');
