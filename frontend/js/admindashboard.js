@@ -429,11 +429,11 @@ async function loadAttendance(date = "") {
                         ${
                             a.photo
                             ? `<img
-                                src="${BASE_URL}${a.photo}?t=${Date.now()}"
-                                width="60"
-                                height="60"
-                                style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #2563eb;"
-                                onerror="this.outerHTML='No Photo';">`
+    src="${BASE_URL}${a.photo}?t=${Date.now()}"
+    class="attendance-photo"
+    title="Click to view full photo"
+    onclick="openPhotoPreview('${BASE_URL}${a.photo}')"
+    onerror="this.outerHTML='No Photo';">`
                             : "No Photo"
                         }
                     </td>
@@ -667,5 +667,38 @@ document.addEventListener("DOMContentLoaded", () => {
             printWindow.focus();
             printWindow.print();
         });
+    }
+});
+
+function openPhotoPreview(photoUrl) {
+    const modal = document.getElementById("photoPreviewModal");
+    const img = document.getElementById("previewAttendancePhoto");
+
+    if (!modal || !img) return;
+
+    img.src = `${photoUrl}?t=${Date.now()}`;
+    modal.style.display = "flex";
+}
+
+function closePhotoPreview(event) {
+    const modal = document.getElementById("photoPreviewModal");
+    const img = document.getElementById("previewAttendancePhoto");
+
+    if (
+        event.target.id === "photoPreviewModal" ||
+        event.target.classList.contains("photo-preview-close")
+    ) {
+        modal.style.display = "none";
+        if (img) img.src = "";
+    }
+}
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+        const modal = document.getElementById("photoPreviewModal");
+        const img = document.getElementById("previewAttendancePhoto");
+
+        if (modal) modal.style.display = "none";
+        if (img) img.src = "";
     }
 });
